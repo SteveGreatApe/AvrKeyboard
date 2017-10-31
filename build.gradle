@@ -1,0 +1,44 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0-rc2'
+        
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+// For latest version see http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.gearvrf%22%20AND%20a%3A%22backend_oculus%22
+    ext.gearvrfVersion='4.0.0'
+    project.ext.jomlVersion = "1.9.3-SNAPSHOT"
+
+    repositories {
+        google()
+
+        jcenter()
+        // For JOML, https://github.com/JOML-CI/JOML/
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url "http://google.bintray.com/googlevr"
+        }
+// Re-enable this (and adjust path if necessary) to build from local GearVRf build
+//        flatDir {
+//            dirs '../../GearVRf/GearVRf/GVRf/gearvrf-libs'
+//        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+

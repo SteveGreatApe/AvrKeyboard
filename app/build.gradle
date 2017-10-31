@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId "com.greatape.avrkbapp"
+        minSdkVersion 23
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets.main {
+        jni.srcDirs = [] // no auto generation of Android.mk
+        jniLibs.srcDir 'libs' // pre-compiled libraries
+    }
+
+    // ignore the x86 files from the google vr libraries
+    packagingOptions {
+        exclude 'lib/x86/libgvr.so'
+        if (!rootProject.hasProperty("ARM64")) {
+            exclude 'lib/arm64-v8a/*.so'
+        } else {
+            exclude 'lib/armeabi-v7a/*.so'
+        }
+    }
+}
+
+task copyOculusSignature(type: Copy) {
+    if (rootProject.hasProperty("OCULUS_SIGS_DIRECTORY")) {
+        copy {
+            from rootProject.property("OCULUS_SIGS_DIRECTORY")
+            into 'src/main/assets'
+            include 'oculussig_*'
+        }
+    }
+}
+
+preBuild {}.dependsOn copyOculusSignature
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "org.joml:joml-android:${jomlVersion}"
+    implementation 'com.google.vr:sdk-base:1.80.0'
+    implementation 'com.google.vr:sdk-controller:1.80.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+
+    // Use official release of GearVRf
+    implementation "org.gearvrf:framework:$gearvrfVersion"
+    implementation "org.gearvrf:backend_daydream:$gearvrfVersion"
+    implementation "org.gearvrf:backend_oculus:$gearvrfVersion"
+
+    // Use our own build of GearVRf
+//    implementation(name: 'framework-debug', ext: 'aar')
+//    implementation(name: 'backend_daydream-debug', ext: 'aar')
+//    implementation(name: 'backend_oculus-debug', ext: 'aar')
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    implementation project(path: ':avrkeyboard')
+}
+

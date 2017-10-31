@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 26
+        versionCode 40
+        versionName "0.40"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "org.joml:joml-android:${jomlVersion}"
+    implementation 'com.google.vr:sdk-base:1.80.0'
+    implementation 'com.google.vr:sdk-controller:1.80.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+
+    // Use official release of GearVRf
+    implementation "org.gearvrf:framework:$gearvrfVersion"
+    implementation "org.gearvrf:backend_daydream:$gearvrfVersion"
+    implementation "org.gearvrf:backend_oculus:$gearvrfVersion"
+
+    // Use our own build of GearVRf
+//    implementation(name: 'framework-debug', ext: 'aar')
+//    implementation(name: 'backend_daydream-debug', ext: 'aar')
+//    implementation(name: 'backend_oculus-debug', ext: 'aar')
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.powermock:powermock:1.6.5'
+    testImplementation 'org.powermock:powermock-module-junit4:1.6.5'
+    testImplementation 'org.powermock:powermock-api-mockito:1.6.5'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}

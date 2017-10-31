@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">AvrKeyboard</string>
+    <string name="click_to_edit_name"><![CDATA[<Click to edit Name>]]></string>
+    <string name="click_to_edit_number">Click to edit number</string>
+    <string name="click_to_edit">Click to edit</string>
+</resources>

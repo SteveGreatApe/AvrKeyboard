@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AvrKeyboard</string>
+
+    <string name="keyboard_theme_holo_white" translatable="false">Holo White</string>
+    <!-- The keyboard theme name, Holo Blue. This is marked as translatable="false" because this is a proper name of system-wide UI Theme.  -->
+    <string name="keyboard_theme_holo_blue" translatable="false">Holo Blue</string>
+    <!-- The keyboard theme name, Material Dark. This is marked as translatable="false" because this is a proper name of system-wide UI Theme.  -->
+    <string name="keyboard_theme_material_dark" translatable="false">Material Dark</string>
+    <!-- The keyboard theme name, Material Light. This is marked as translatable="false" because this is a proper name of system-wide UI Theme.  -->
+    <string name="keyboard_theme_material_light" translatable="false">Material Light</string>
+
+    <string name="subtype_no_language_qwerty">Alphabet (QWERTY)</string>
+    <string name="subtype_no_language">No language (Alphabet)</string>
+    <string name="subtype_emoji">Emoji</string>
+
+    // For Keyboard Service and Method.xml
+    <string name="ape_vr_keyboard">ApeVrKeyboard</string>
+    <string name="subtype_en_US">subtype_en_US</string>
+    <string name="subtype_en_GB">subtype_en_GB</string>
+    <string name="subtype_es_US">subtype_es_US</string>
+    <string name="subtype_generic_compact">subtype_generic_compact</string>
+    <string name="subtype_generic_traditional">subtype_generic_traditional</string>
+    <string name="subtype_sr_ZZ">subtype_sr_ZZ</string>
+</resources>
