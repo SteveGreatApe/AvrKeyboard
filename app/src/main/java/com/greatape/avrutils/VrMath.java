@@ -44,4 +44,14 @@ public class VrMath {
         float y = sinYaw;
         return (float) Math.atan2(y, x);
     }
+
+    public static double normalisedAngle(double angle) {
+        while(angle >= Math.PI) {
+            angle -= Math.PI * 2;
+        }
+        while(angle < -Math.PI) {
+            angle += Math.PI * 2;
+        }
+        return angle;
+    }
 }

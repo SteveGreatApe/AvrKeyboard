@@ -21,11 +21,11 @@ public abstract class EditableTextObject extends ObjectBase {
     final GVRContext mGVRContext;
     TextFieldSet mTextFieldSet;
     AvrKeyboard mAvrKeyboard;
-    private KeyboardStyle mKeyboardStyle;
+    KeyboardStyle mKeyboardStyle;
     private AvrKeyboard.KeyboardType mKeyboardType;
     float mScale;
     private AvrShowHideAnimation mKeyboardAnimation;
-    private Vector3f mKeyboardOffset = new Vector3f();
+    Vector3f mKeyboardOffset = new Vector3f();
 
     TextResult mResult;
 
@@ -126,7 +126,7 @@ public abstract class EditableTextObject extends ObjectBase {
         }
     }
 
-    private void hideKeyboard() {
+    protected void hideKeyboard() {
         if (mKeyboardAnimation != null) {
             mKeyboardAnimation.hide();
         } else {
@@ -134,7 +134,7 @@ public abstract class EditableTextObject extends ObjectBase {
         }
     }
 
-    private void addTextFields(TextFieldSpec[] fieldSpecs, TextFieldStyle textFieldStyle) {
+    void addTextFields(TextFieldSpec[] fieldSpecs, TextFieldStyle textFieldStyle) {
         int renderingOrder = GVRRenderData.GVRRenderingOrder.TRANSPARENT + 10;
         mTextFieldSet = new TextFieldSet(mAvrKeyboard, new TextFieldSet.Listener() {
             @Override
@@ -158,6 +158,7 @@ public abstract class EditableTextObject extends ObjectBase {
         final Vector3f fieldSetExtraOffset = new Vector3f(0f, 0.25f, 0f);
         fieldSetLink.setExtraOffset(fieldSetExtraOffset);
         mTextFieldSet.setScale(1.0f);
+        // TODO: Investigate why if I call addChildObject later the layout goes wrong
         mAvrKeyboard.addChildObject(mTextFieldSet);
         mAvrKeyboard.addLink(fieldSetLink);
 

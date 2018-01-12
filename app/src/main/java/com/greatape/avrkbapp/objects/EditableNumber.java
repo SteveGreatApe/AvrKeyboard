@@ -58,4 +58,5 @@ public class EditableNumber extends EditableTextObject {
         ret.textStyle.background = new DrawableStyle(textFieldStyle.back_button.keyStyle.background);
         ret.textStyle.hover_background = new DrawableStyle(textFieldStyle.back_button.keyStyle.hover_background);
         return ret;
-    }}
+    }
+}

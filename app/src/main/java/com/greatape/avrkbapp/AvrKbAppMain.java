@@ -14,9 +14,30 @@
  */
 package com.greatape.avrkbapp;
 
+import android.util.Log;
+import android.view.MotionEvent;
+
+import com.greatape.avrkeyboard.util.AvrTouchHandler;
+import com.greatape.avrutils.AvrControllerButtonHandler;
+import com.greatape.avrutils.AvrEventHandler;
+
+import org.gearvrf.GVRAndroidResource;
+import org.gearvrf.GVRAssetLoader;
 import org.gearvrf.GVRContext;
+import org.gearvrf.GVRCursorController;
 import org.gearvrf.GVRMain;
+import org.gearvrf.GVRPicker;
+import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRScene;
+import org.gearvrf.GVRSceneObject;
+import org.gearvrf.GVRTexture;
+import org.gearvrf.ITouchEvents;
+import org.gearvrf.io.GVRControllerType;
+import org.gearvrf.io.GVRInputManager;
+
+import java.util.EnumSet;
+
+import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend
@@ -25,13 +46,47 @@ public class AvrKbAppMain extends GVRMain {
     private GVRContext mGVRContext;
     private GVRScene mMainScene;
     private AvrKbAppScene mAvrKbAppScene;
+    private GVRSceneObject cursor;
 
     @Override
     public void onInit(GVRContext gvrContext) throws Throwable {
         super.onInit(gvrContext);
         mGVRContext = gvrContext;
         mMainScene = gvrContext.getMainScene();
+
+        // Launch the main Scene
         mAvrKbAppScene = new AvrKbAppScene(this);
         mAvrKbAppScene.resume(gvrContext);
+
+        // Needs to be called before setting up the controller
+        AvrTouchHandler.init(gvrContext);
+        AvrEventHandler.init();
+
+        // Create a cursor
+        GVRAssetLoader assetLoader = new GVRAssetLoader(gvrContext);
+        GVRAndroidResource trackerResource = new GVRAndroidResource(gvrContext, R.raw.cursor);
+        GVRTexture trackerTexture = assetLoader.loadTexture(trackerResource);
+        GVRInputManager inputManager = mGVRContext.getInputManager();
+        cursor = new GVRSceneObject(mGVRContext, mGVRContext.createQuad(1f, 1f), trackerTexture);
+        cursor.getRenderData().setDepthTest(false);
+        cursor.getRenderData().setRenderingOrder(GVRRenderData.GVRRenderingOrder.OVERLAY);
+        // Set up the controller types supported.
+        // TODO: Add and test Mouse and Gamepad controllers
+        inputManager.selectController(new GVRInputManager.ICursorControllerSelectListener() {
+            private static final float DEPTH = -7.0f;
+            public void onCursorControllerSelected(GVRCursorController newController, GVRCursorController oldController) {
+                if (oldController != null) {
+                    oldController.removeControllerEventListener(AvrEventHandler.controllerButtonHandler());
+                }
+                GVRPicker picker = newController.getPicker();
+                EnumSet<GVRPicker.EventOptions> eventOptions = picker.getEventOptions();
+                eventOptions.add(GVRPicker.EventOptions.SEND_TO_HIT_OBJECT);
+
+                newController.addControllerEventListener(AvrEventHandler.controllerButtonHandler());
+                newController.setCursor(cursor);
+                newController.setCursorDepth(DEPTH);
+                newController.setCursorControl(GVRCursorController.CursorControl.PROJECT_CURSOR_ON_SURFACE);
+            }
+        });
     }
 }

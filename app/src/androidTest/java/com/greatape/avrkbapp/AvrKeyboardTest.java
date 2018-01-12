@@ -41,6 +41,7 @@ import static com.greatape.avrkeyboard.model.AvrKeyboard.MODE_NORMAL;
 import static com.greatape.avrkeyboard.model.AvrKeyboard.MODE_SHIFTED;
 import static com.greatape.avrkeyboard.model.AvrKeyboard.MODE_SHIFTED_SPECIAL;
 import static com.greatape.avrkeyboard.model.AvrKeyboard.MODE_SPECIAL;
+import static junit.framework.Assert.fail;
 
 /**
  * @author Steve Townsend
@@ -50,32 +51,19 @@ public class AvrKeyboardTest extends AvrTestBase {
     private static final String TAG = "AvrKeyboardTest";
     private final static boolean verboseLog = false;
 
-    @Before
-    public void setUp() {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                HeapDump();
-            }
-        });
-    }
-
     @Test @UiThreadTest
     public void testLanguagesAndElementModes() throws Exception {
         try {
             for (LanguageSetup language : LanguageSetup.getTestLanguages()) {
                 Log.d(TAG, "Language: " + language.toString());
                 doTestKeyListForLanguage(language);
-                // TODO: There are attempts to clean up leaks, but they don't work, problem seems to be a fundamental one in GVRf
-                System.gc();
-                System.runFinalization();
             }
         } catch (OutOfMemoryError oom) {
             // TODO: Avoid ignoring OOM errors if issue with framework resolved
             // Currently there seem to be unavoidable errors where GVRf objects are not being
             // released for garbage collection, so we have to just ignore OOM errors for now.
-            // HeapDump();
-            // fail(oom.getMessage());
+            HeapDump();
+            fail(oom.getMessage());
         }
     }
 

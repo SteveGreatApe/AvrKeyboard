@@ -34,11 +34,11 @@ import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMesh;
 import org.gearvrf.GVRMeshCollider;
 import org.gearvrf.GVRPhongShader;
+import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRShaderId;
 import org.gearvrf.GVRTexture;
-import org.gearvrf.IHoverEvents;
 import org.gearvrf.ITouchEvents;
 import org.gearvrf.utility.Colors;
 import org.joml.Vector3f;
@@ -46,6 +46,8 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend
@@ -105,7 +107,6 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
 
     interface Listener {
         void onClaimFocus(TextField textField);
-
         void onBack(TextField textField);
     }
 
@@ -620,7 +621,7 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
         return stringBuilder.toString();
     }
 
-    public class SpaceObject extends GVRSceneObject implements ITouchEvents, IHoverEvents {
+    public class SpaceObject extends GVRSceneObject implements ITouchEvents {
         private int mIndex;
         private boolean mClickLeft;
         private boolean mIsSelected;
@@ -659,36 +660,40 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
         }
 
         @Override
-        public void onHoverEnter(GVRSceneObject sceneObject) {
+        public void onEnter(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
             setSelected(true);
         }
 
         @Override
-        public void onHoverExit(GVRSceneObject sceneObject) {
+        public void onExit(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
             setSelected(false);
         }
 
         @Override
-        public void onTouch(GVRSceneObject sceneObject, MotionEvent motionEvent, float[] hitLocation) {
-            final int action = motionEvent.getAction();
-            StringBuilder location = new StringBuilder();
-            if (hitLocation != null) {
-                location.append(hitLocation[0]).append(",").append(hitLocation[1]).append(",").append(hitLocation[2]);
-            } else {
-                location.append("null");
+        public void onTouchStart(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+        }
+
+        @Override
+        public void onTouchEnd(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+            if (gvrPickedObject.motionEvent != null && gvrPickedObject.motionEvent.getButtonState() == BUTTON_SECONDARY) {
+                StringBuilder location = new StringBuilder();
+                if (gvrPickedObject.hitLocation != null) {
+                    location.append(gvrPickedObject.hitLocation[0]).append(",").append(gvrPickedObject.hitLocation[1]).append(",").append(gvrPickedObject.hitLocation[2]);
+                } else {
+                    location.append("null");
+                }
+                onClickChar(gvrPickedObject.hitLocation);
             }
-            switch (action) {
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_DOWN:
-                    break;
-                case MotionEvent.ACTION_UP:
-                    onClickChar(hitLocation);
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_OUTSIDE:
-                    break;
-            }
+        }
+
+        @Override
+        public void onInside(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+
+        }
+
+        @Override
+        public void onMotionOutside(GVRPicker gvrPicker, MotionEvent motionEvent) {
+
         }
     }
 }

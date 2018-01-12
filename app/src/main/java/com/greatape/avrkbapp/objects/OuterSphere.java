@@ -21,12 +21,15 @@ import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMeshCollider;
 import org.gearvrf.GVRPhongShader;
+import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRShaderId;
 import org.gearvrf.ITouchEvents;
 import org.gearvrf.scene_objects.GVRSphereSceneObject;
 import org.gearvrf.utility.Colors;
+
+import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend
@@ -42,6 +45,7 @@ public class OuterSphere extends ObjectBase implements ITouchEvents {
         renderData.setMaterial(mMaterial);
         renderData.setAlphaBlend(true);
         renderData.setRenderingOrder(GVRRenderData.GVRRenderingOrder.BACKGROUND);
+        mSceneObject.setName("OuterSphere");
         mSceneObject.getEventReceiver().addListener(this);
         mSceneObject.attachCollider(new GVRMeshCollider(gvrContext, true));
     }
@@ -65,17 +69,29 @@ public class OuterSphere extends ObjectBase implements ITouchEvents {
     }
 
     @Override
-    public void onTouch(GVRSceneObject sceneObject, MotionEvent motionEvent, float[] hitLocation) {
-        final int action = motionEvent.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_UP:
-                cycleColor();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_OUTSIDE:
-                break;
+    public void onEnter(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+    }
+
+    @Override
+    public void onExit(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+    }
+
+    @Override
+    public void onTouchStart(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+    }
+
+    @Override
+    public void onTouchEnd(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+        if (gvrPickedObject.motionEvent != null && gvrPickedObject.motionEvent.getButtonState() == BUTTON_SECONDARY) {
+            cycleColor();
         }
+    }
+
+    @Override
+    public void onInside(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+    }
+
+    @Override
+    public void onMotionOutside(GVRPicker gvrPicker, MotionEvent motionEvent) {
     }
 }

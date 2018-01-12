@@ -28,6 +28,7 @@
         framebufferPixelsHigh="DEFAULT"
         framebufferPixelsWide="DEFAULT"
         showLoadingIcon="true"
+        useControllerTypes="gaze,controller,weartouchpad"
         useProtectedFramebuffer="false"
         useSrgbFramebuffer="false" >
 

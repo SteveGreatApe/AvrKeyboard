@@ -21,8 +21,10 @@ import android.util.Log;
 
 import org.gearvrf.GVRActivity;
 import org.gearvrf.GVRContext;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Rule;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,14 +35,24 @@ import java.io.IOException;
 public class AvrTestBase {
     private static final String TAG = "AvrTestBase";
 
-    static GVRActivity mActivity;
-    static GVRContext mGVRContext;
+    GVRActivity mActivity;
+    GVRContext mGVRContext;
 
-    @ClassRule
-    public static ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @BeforeClass
     public static void setUpClass() {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                HeapDump();
+            }
+        });
+    }
+
+    @Before
+    public void setUp() {
         mActivity = mActivityRule.getActivity();
         mGVRContext = mActivity.getGVRContext();
         try {

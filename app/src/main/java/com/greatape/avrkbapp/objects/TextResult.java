@@ -20,6 +20,8 @@ import android.view.MotionEvent;
 import com.greatape.avrkeyboard.styles.TextFieldStyle;
 import com.greatape.avrkeyboard.textField.TextField;
 import com.greatape.avrkeyboard.textField.TextFieldSet;
+import com.greatape.avrkeyboard.util.AvrTouchEvents;
+import com.greatape.avrkeyboard.util.AvrTouchHandler;
 import com.greatape.avrutils.anim.AvrAnim;
 import com.greatape.avrutils.anim.AvrRelativePositionAnim;
 import com.greatape.avrutils.anim.AvrScaleAnim;
@@ -27,17 +29,19 @@ import com.greatape.avrutils.anim.AvrShowHideAnimation;
 import com.greatape.avrutils.objects.LayoutLink;
 
 import org.gearvrf.GVRContext;
+import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTransform;
-import org.gearvrf.IHoverEvents;
 import org.gearvrf.ITouchEvents;
 import org.joml.Vector3f;
+
+import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend
  */
-public class TextResult extends ObjectBase implements IHoverEvents, ITouchEvents {
+public class TextResult extends ObjectBase implements AvrTouchEvents {
     private static final float ZPOS = 0.001f;
 
     private OnPickListener mOnPickListener;
@@ -56,7 +60,7 @@ public class TextResult extends ObjectBase implements IHoverEvents, ITouchEvents
 
         int renderingOrder = GVRRenderData.GVRRenderingOrder.TRANSPARENT + 10;
         mResultTextFieldSet = new TextFieldSet(gvrContext, renderingOrder);
-        mResultTextFieldSet.getEventReceiver().addListener(this);
+        mResultTextFieldSet.getEventReceiver().addListener(new AvrTouchHandler(this));
         mResultTextFields = new TextField[numTextFields];
         mSceneObject.addChildObject(mResultTextFieldSet);
         LayoutLink.LinkOwner previousTextField = null;
@@ -142,29 +146,23 @@ public class TextResult extends ObjectBase implements IHoverEvents, ITouchEvents
     }
 
     @Override
-    public void onHoverEnter(GVRSceneObject sceneObject) {
+    public void onAvrEnter(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
         onSelected(true);
     }
 
     @Override
-    public void onHoverExit(GVRSceneObject sceneObject) {
+    public void onAvrExit(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
         onSelected(false);
     }
 
     @Override
-    public void onTouch(GVRSceneObject sceneObject, MotionEvent motionEvent, float[] hitLocation) {
-        final int action = motionEvent.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_UP:
-                if (hitLocation != null) {
-                    mOnPickListener.onPick();
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_OUTSIDE:
-                break;
+    public void onAvrTouchStart(GVRSceneObject sceneObj, GVRPicker.GVRPickedObject gvrPickedObject) {
+    }
+
+    @Override
+    public void onAvrTouchEnd(GVRSceneObject sceneObj, GVRPicker.GVRPickedObject gvrPickedObject) {
+        if (gvrPickedObject.hitLocation != null) {
+            mOnPickListener.onPick();
         }
     }
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.1'
     defaultConfig {
         applicationId "com.greatape.avrkbapp"
         minSdkVersion 23
@@ -32,6 +32,10 @@ android {
             exclude 'lib/armeabi-v7a/*.so'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 task copyOculusSignature(type: Copy) {
@@ -50,19 +54,19 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation "org.joml:joml-android:${jomlVersion}"
-    implementation 'com.google.vr:sdk-base:1.80.0'
-    implementation 'com.google.vr:sdk-controller:1.80.0'
+    implementation 'com.google.vr:sdk-base:1.101.0'
+    implementation 'com.google.vr:sdk-controller:1.101.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
 
     // Use official release of GearVRf
-    implementation "org.gearvrf:framework:$gearvrfVersion"
-    implementation "org.gearvrf:backend_daydream:$gearvrfVersion"
-    implementation "org.gearvrf:backend_oculus:$gearvrfVersion"
+//    implementation "org.gearvrf:framework:$gearvrfVersion"
+//    implementation "org.gearvrf:backend_daydream:$gearvrfVersion"
+//    implementation "org.gearvrf:backend_oculus:$gearvrfVersion"
 
     // Use our own build of GearVRf
-//    implementation(name: 'framework-debug', ext: 'aar')
-//    implementation(name: 'backend_daydream-debug', ext: 'aar')
-//    implementation(name: 'backend_oculus-debug', ext: 'aar')
+    implementation(name: 'framework-debug', ext: 'aar')
+    implementation(name: 'backend_daydream-debug', ext: 'aar')
+    implementation(name: 'backend_oculus-debug', ext: 'aar')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

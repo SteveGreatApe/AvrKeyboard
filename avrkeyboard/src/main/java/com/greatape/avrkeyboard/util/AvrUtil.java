@@ -45,13 +45,13 @@ public class AvrUtil {
     }
 
     public static float[] getMeshVertices(GVRMesh mesh) {
-        // For 4.0 use this alternative
+        // TODO: For 4.0 use this alternative, delete once onto an official build with a fix
         GVRVertexBuffer vertexBuffer = mesh.getVertexBuffer();
         FloatBuffer floatBuffer = vertexBuffer.getFloatVec("a_position");
         int count = floatBuffer.remaining();
         float[] vertices = new float[count];
         floatBuffer.get(vertices);
-        // For 3.3 this still works
+        // For 3.3 this still works, should also be fixed post 4.0
 //        float[] vertices = mesh.getVertices(); // Throws UnsupportedOperationException in 4.0
         return vertices;
     }

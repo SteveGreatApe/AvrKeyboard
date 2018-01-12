@@ -102,7 +102,10 @@ public class TextFieldSet extends GVRSceneObject implements KeyboardEventListene
         getTransform().setScale(scale, scale, scale);
     }
 
-    public void close() {
+    public void close(boolean sendOnCancel) {
+        if (sendOnCancel) {
+            mListener.onCancel();
+        }
         for(TextField textField : mTextFields) {
             textField.close();
         }

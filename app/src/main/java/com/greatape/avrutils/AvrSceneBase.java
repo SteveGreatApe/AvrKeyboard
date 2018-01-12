@@ -25,7 +25,6 @@ import org.gearvrf.io.GVRInputManager;
  */
 public abstract class AvrSceneBase {
     protected GVRContext mGVRContext;
-    protected AvrPicker mAvrPicker;
     private boolean mInitComplete;
 
     public void onInit(GVRContext gvrContext) {
@@ -35,16 +34,9 @@ public abstract class AvrSceneBase {
     public abstract void close();
 
     public abstract String sceneName();
-    public abstract void createPicker();
 
     @CallSuper
     public void hibernate() {
-        if (mAvrPicker != null) {
-            GVRInputManager inputManager = mGVRContext.getInputManager();
-            inputManager.removeCursorControllerListener(mAvrPicker.cursorControllerListener());
-            mAvrPicker.removeControllers(mGVRContext.getInputManager());
-            mAvrPicker = null;
-        }
     }
 
     @CallSuper
@@ -53,16 +45,6 @@ public abstract class AvrSceneBase {
             onInit(gvrContext);
             mInitComplete = true;
         }
-        createPicker();
-        GVRInputManager inputManager = mGVRContext.getInputManager();
-        mAvrPicker.addControllers(inputManager);
-        inputManager.addCursorControllerListener(mAvrPicker.cursorControllerListener());
-    }
-
-    void pickerStateChanged() {
-    }
-
-    public void activeCursorControllerChanged() {
     }
 
     public boolean isInitComplete() {

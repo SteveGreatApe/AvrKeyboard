@@ -24,30 +24,35 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.greatape.avrkeyboard.styles.KeyStyle;
+import com.greatape.avrkeyboard.util.AvrTouchEvents;
+import com.greatape.avrkeyboard.util.AvrTouchHandler;
 import com.greatape.avrkeyboard.util.AvrUtil;
 
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMesh;
 import org.gearvrf.GVRMeshCollider;
+import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTexture;
 import org.gearvrf.GVRTransform;
-import org.gearvrf.IHoverEvents;
 import org.gearvrf.ITouchEvents;
 
 import java.lang.ref.SoftReference;
 
+import static android.view.MotionEvent.BUTTON_SECONDARY;
+
 /**
  * @author Steve Townsend
  */
-public class KeyItem extends GVRSceneObject implements ITouchEvents, IHoverEvents {
+public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
     // Defines How much of the button area should a bitmap resource take up
     private final static float RESOURCE_BITMAP_FILL_FRACTION = 0.5f;
     private final static long LONG_PRESS_TIME = 2000L;
@@ -99,6 +104,7 @@ public class KeyItem extends GVRSceneObject implements ITouchEvents, IHoverEvent
     private KeyItem(GVRContext gvrContext, KeyListener keyListener, KeyStyle keyStyle, int width, int height, float vrWidth, float vrHeight, int renderingOrder) {
         super(gvrContext);
         setName("KeyItem");
+        getEventReceiver().addListener(new AvrTouchHandler(this));
         mKeyListener = keyListener;
         mKeyStyle = keyStyle;
         mKeyboardCharItem = new KeyboardCharItem();
@@ -123,7 +129,7 @@ public class KeyItem extends GVRSceneObject implements ITouchEvents, IHoverEvent
         detailRenderData.setAlphaBlend(true);
         addChildObject(mDetailSceneObject);
         setTag(this);
-        attachComponent(new GVRMeshCollider(gvrContext, true));
+        attachCollider(new GVRMeshCollider(gvrContext, true));
     }
 
     void setPosition(int x, int y) {
@@ -342,7 +348,7 @@ public class KeyItem extends GVRSceneObject implements ITouchEvents, IHoverEvent
     }
 
     @Override
-    public void onHoverEnter(GVRSceneObject sceneObject) {
+    public void onAvrEnter(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
         setSelected(true);
         if (mDownTime != null) {
             onPickDown();
@@ -350,26 +356,24 @@ public class KeyItem extends GVRSceneObject implements ITouchEvents, IHoverEvent
     }
 
     @Override
-    public void onHoverExit(GVRSceneObject sceneObject) {
+    public void onAvrExit(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
         setSelected(false);
     }
 
     @Override
-    public void onTouch(GVRSceneObject sceneObject, MotionEvent motionEvent, float[] hitLocation) {
-        final int action = motionEvent.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                onPickDown();
-                break;
-            case MotionEvent.ACTION_UP:
-                long downTime = -1;
-                if (mDownTime != null && hitLocation != null) {
-                    downTime = System.currentTimeMillis() - mDownTime;
-                }
-                onPickUp(downTime);
-                mDownTime = null;
-                break;
+    public void onAvrTouchStart(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+        onPickDown();
+    }
+
+    @Override
+    public void onAvrTouchEnd(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+        long downTime = -1;
+        // TODO: Check out if we still need the hitLocation != null check
+        if (mDownTime != null && gvrPickedObject.hitLocation != null) {
+            downTime = System.currentTimeMillis() - mDownTime;
         }
+        onPickUp(downTime);
+        mDownTime = null;
     }
 
     protected void setDepressed(boolean depressed) {

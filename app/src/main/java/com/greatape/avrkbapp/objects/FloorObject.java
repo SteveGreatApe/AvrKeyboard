@@ -14,22 +14,23 @@
  */
 package com.greatape.avrkbapp.objects;
 
-import android.view.MotionEvent;
-
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMeshCollider;
+import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTexture;
-import org.gearvrf.ITouchEvents;
 
 import java.io.IOException;
+
+import static android.view.MotionEvent.BUTTON_SECONDARY;
+import static org.gearvrf.GVREventListeners.TouchEvents;
 
 /**
  * @author Steve Townsend
  */
-public class FloorObject extends ObjectBase implements ITouchEvents {
+public class FloorObject extends ObjectBase {
     private int mFloorIndex;
     private String[] mFloorTextureAssets;
 
@@ -40,23 +41,16 @@ public class FloorObject extends ObjectBase implements ITouchEvents {
         GVRRenderData renderData = mSceneObject.getRenderData();
         renderData.setRenderingOrder(GVRRenderData.GVRRenderingOrder.BACKGROUND + 10);
         setFloorTexture();
-        mSceneObject.getEventReceiver().addListener(this);
+        mSceneObject.setName("FloorObject");
+        mSceneObject.getEventReceiver().addListener(new TouchEvents() {
+            @Override
+            public void onTouchEnd(GVRSceneObject gvrSceneObject, GVRPicker.GVRPickedObject gvrPickedObject) {
+                if (gvrPickedObject.motionEvent != null && gvrPickedObject.motionEvent.getButtonState() == BUTTON_SECONDARY) {
+                    cycleFloor();
+                }
+            }
+        });
         mSceneObject.attachCollider(new GVRMeshCollider(gvrContext, true));
-    }
-
-    @Override
-    public void onTouch(GVRSceneObject sceneObject, MotionEvent motionEvent, float[] hitLocation) {
-        final int action = motionEvent.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_UP:
-                cycleFloor();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_OUTSIDE:
-                break;
-        }
     }
 
     private void cycleFloor() {
