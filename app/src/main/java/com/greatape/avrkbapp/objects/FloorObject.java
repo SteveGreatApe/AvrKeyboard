@@ -14,6 +14,8 @@
  */
 package com.greatape.avrkbapp.objects;
 
+import com.greatape.avrkeyboard.util.AvrUtil;
+
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMeshCollider;
@@ -37,7 +39,7 @@ public class FloorObject extends ObjectBase {
     public FloorObject(GVRContext gvrContext, float floorSize, String[] textureAssets) {
         super();
         mFloorTextureAssets = textureAssets;
-        mSceneObject = new GVRSceneObject(gvrContext, floorSize, floorSize);
+        mSceneObject = new GVRSceneObject(gvrContext, gvrContext.createQuad(floorSize, floorSize), AvrUtil.createTextureMaterial(gvrContext));
         GVRRenderData renderData = mSceneObject.getRenderData();
         renderData.setRenderingOrder(GVRRenderData.GVRRenderingOrder.BACKGROUND + 10);
         setFloorTexture();
@@ -62,7 +64,7 @@ public class FloorObject extends ObjectBase {
         try {
             GVRContext gvrContext = mSceneObject.getGVRContext();
             GVRTexture texture = gvrContext.getAssetLoader().loadTexture(new GVRAndroidResource(gvrContext, mFloorTextureAssets[mFloorIndex]));
-            mSceneObject.getRenderData().getMaterial().setMainTexture(texture);
+            AvrUtil.setDiffuseAndAmbientTextures(mSceneObject.getRenderData().getMaterial(), texture);
         } catch (IOException e) {
             e.printStackTrace();
         }

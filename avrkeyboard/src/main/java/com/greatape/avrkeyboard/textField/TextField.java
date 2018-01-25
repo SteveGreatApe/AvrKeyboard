@@ -579,10 +579,10 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
         }
         GVRMesh mesh = getGVRContext().createQuad(width, mCursorHeight);
         if (extraXOffset != 0) {
-            AvrUtil.offsetQuad(mesh, extraXOffset, 0, 0);
+            AvrUtil.offsetMesh(mesh, extraXOffset, 0, 0);
         }
         if (offset != null) {
-            AvrUtil.offsetQuad(mesh, offset.x, offset.y, offset.z);
+            AvrUtil.offsetMesh(mesh, offset.x, offset.y, offset.z);
         }
         return new GVRSceneObject(getGVRContext(), mesh);
     }

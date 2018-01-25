@@ -18,7 +18,6 @@ package com.greatape.avrutils;
 import android.support.annotation.CallSuper;
 
 import org.gearvrf.GVRContext;
-import org.gearvrf.io.GVRInputManager;
 
 /**
  * @author Steve Townsend

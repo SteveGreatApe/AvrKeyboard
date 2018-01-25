@@ -24,7 +24,7 @@ import java.util.WeakHashMap;
 /**
  * @author Steve Townsend
  */
-public class AvrControllerButtonHandler implements GVRCursorController.ControllerEventListener {
+public class AvrControllerButtonHandler implements GVRCursorController.IControllerEvent {
     private SparseIntArray mKeysDown = new SparseIntArray();
     private WeakHashMap<AvrControllerButton, Void> mControllerButtons;
 

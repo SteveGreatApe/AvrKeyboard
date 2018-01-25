@@ -34,7 +34,8 @@ allprojects {
         }
 // Enable this (and adjust path if necessary) to build from local GearVRf build
         flatDir {
-            dirs '../../GearVRf/GearVRf/GVRf/gearvrf-libs'
+//        dirs '../../GearVRf/GearVRf/GVRf/gearvrf-libs'
+            dirs '../../NolaDonato/GearVRf/GVRf/gearvrf-libs'
         }
     }
 }

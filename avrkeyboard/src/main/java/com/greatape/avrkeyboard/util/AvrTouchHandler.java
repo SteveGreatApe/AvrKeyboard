@@ -31,7 +31,7 @@ import static android.view.MotionEvent.BUTTON_SECONDARY;
  * @author Steve Townsend
  */
 public class AvrTouchHandler implements ITouchEvents {
-    private final static boolean verboseLog = false;
+    private final static boolean verboseLog = true;
     private final static String TAG = "AvrTouchHandler";
 
     private AvrTouchEvents mListener;

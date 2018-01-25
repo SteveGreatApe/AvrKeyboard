@@ -15,7 +15,6 @@
 package com.greatape.avrkbapp.objects;
 
 import android.text.TextUtils;
-import android.view.MotionEvent;
 
 import com.greatape.avrkeyboard.styles.TextFieldStyle;
 import com.greatape.avrkeyboard.textField.TextField;
@@ -33,10 +32,7 @@ import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTransform;
-import org.gearvrf.ITouchEvents;
 import org.joml.Vector3f;
-
-import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend

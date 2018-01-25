@@ -15,6 +15,8 @@
 package com.greatape.avrkbapp;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 
 import org.gearvrf.GVRActivity;
 

@@ -33,21 +33,21 @@ public class TextFieldItem extends GVRSceneObject {
     private KeyStyle mTextKeyStyle;
 
     TextFieldItem(GVRContext gvrContext, float sceneObjectWidth, float sceneObjectHeight, Bitmap bitmap, char keyChar, TextField textField) {
-        super(gvrContext, sceneObjectWidth, sceneObjectHeight, AvrUtil.bitmapTexture(gvrContext, bitmap));
+        super(gvrContext, gvrContext.createQuad(sceneObjectWidth, sceneObjectHeight), AvrUtil.createTextureMaterial(gvrContext));
         setName("TextFieldItem");
         mKeyChar = keyChar;
         GVRRenderData renderData = getRenderData();
-        mTextKeyStyle = textField.getStyle().textStyle;
-        renderData.getMaterial().setColor(mTextKeyStyle.text_color);
+        AvrUtil.setDiffuseAndAmbientTextures(renderData.getMaterial(), AvrUtil.bitmapTexture(gvrContext, bitmap));
         renderData.setAlphaBlend(true);
+        mTextKeyStyle = textField.getStyle().textStyle;
+        AvrUtil.setDiffuseAndAmbientColors(this, mTextKeyStyle.text_color);
         mSupportsHover = mTextKeyStyle.text_color_hover != 0;
     }
 
     void setHover(boolean hover) {
         if (mSupportsHover && hover != mHover) {
             mHover = hover;
-            GVRRenderData renderData = getRenderData();
-            renderData.getMaterial().setColor(mHover ? mTextKeyStyle.text_color_hover : mTextKeyStyle.text_color);
+            AvrUtil.setDiffuseAndAmbientColors(this, mHover ? mTextKeyStyle.text_color_hover : mTextKeyStyle.text_color);
         }
     }
 

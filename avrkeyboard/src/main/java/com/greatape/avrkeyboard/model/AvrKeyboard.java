@@ -485,14 +485,14 @@ public class AvrKeyboard extends GVRSceneObject implements KeyItem.KeyListener, 
     private void createBackground(float xOffset, float yOffset, float width, float height) {
         GVRContext gvrContext = getGVRContext();
         GVRMesh mesh = gvrContext.createQuad(width, height);
-        AvrUtil.offsetQuad(mesh, xOffset, yOffset, -0.001f);
-        GVRMaterial material = new GVRMaterial(gvrContext);
+        AvrUtil.offsetMesh(mesh, xOffset, yOffset, -0.001f);
+        GVRMaterial material = AvrUtil.createTextureMaterial(gvrContext);
         GVRRenderData renderData = new GVRRenderData(gvrContext);
         renderData.setAlphaBlend(true);
         renderData.setRenderingOrder(mRenderingOrder);
         renderData.setMesh(mesh);
         GVRTexture texture = mStyle.keyStyle.gvrTexture(gvrContext, width, height, mStyle.background);
-        material.setMainTexture(texture);
+        AvrUtil.setDiffuseAndAmbientTextures(material, texture);
         renderData.setMaterial(material);
         attachRenderData(renderData);
         attachCollider(new GVRMeshCollider(gvrContext, true));

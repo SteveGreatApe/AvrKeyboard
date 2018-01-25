@@ -22,6 +22,7 @@ import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMeshCollider;
 import org.gearvrf.GVRPhongShader;
 import org.gearvrf.GVRPicker;
+import org.gearvrf.GVRPointLight;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRShaderId;
@@ -37,6 +38,10 @@ import static android.view.MotionEvent.BUTTON_SECONDARY;
 public class OuterSphere extends ObjectBase implements ITouchEvents {
     private int mColorIndex;
     private int[] mColors;
+    private int[] mAmbientLights;
+    private int[] mDiffuseLights;
+    private GVRSceneObject mLightObject;
+    private GVRPointLight mLight;
 
     public OuterSphere(GVRContext gvrContext, float radius) {
         mSceneObject = new GVRSphereSceneObject(gvrContext, false, radius);
@@ -48,11 +53,45 @@ public class OuterSphere extends ObjectBase implements ITouchEvents {
         mSceneObject.setName("OuterSphere");
         mSceneObject.getEventReceiver().addListener(this);
         mSceneObject.attachCollider(new GVRMeshCollider(gvrContext, true));
+
+        mLightObject = new GVRSceneObject(gvrContext);
+        mLightObject.getTransform().setPositionY(radius / 2f);
+        mSceneObject.addChildObject(mLightObject);
     }
 
     public void setColors(int[] colors) {
         mColors = colors;
         setColor(mColors[mColorIndex]);
+    }
+
+    public void setLights(int[] ambientLights, int[] diffuseLights) {
+        mAmbientLights = ambientLights;
+        mDiffuseLights = diffuseLights;
+        setLights(mAmbientLights[mColorIndex], mDiffuseLights[mColorIndex]);
+    }
+
+    private void setLights(int ambientLight, int diffuseLight) {
+        if (ambientLight == 0 && diffuseLight == 0) {
+            if (mLight != null) {
+                mLightObject.detachLight();
+                mLight = null;
+            }
+        } else {
+            if (mLight == null) {
+                mLight = new GVRPointLight(mLightObject.getGVRContext());
+                mLightObject.attachLight(mLight);
+            }
+            mLight.setAmbientIntensity(
+                    Colors.byteToGl(Color.red(ambientLight)),
+                    Colors.byteToGl(Color.green(ambientLight)),
+                    Colors.byteToGl(Color.blue(ambientLight)),
+                    Colors.byteToGl(Color.alpha(ambientLight)));
+            mLight.setDiffuseIntensity(
+                    Colors.byteToGl(Color.red(diffuseLight)),
+                    Colors.byteToGl(Color.green(diffuseLight)),
+                    Colors.byteToGl(Color.blue(diffuseLight)),
+                    Colors.byteToGl(Color.alpha(diffuseLight)));
+        }
     }
 
     public void setColor(int color) {
@@ -66,6 +105,7 @@ public class OuterSphere extends ObjectBase implements ITouchEvents {
     private void cycleColor() {
         mColorIndex = (mColorIndex + 1) % mColors.length;
         setColor(mColors[mColorIndex]);
+        setLights(mAmbientLights[mColorIndex], mDiffuseLights[mColorIndex]);
     }
 
     @Override

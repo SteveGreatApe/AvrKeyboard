@@ -156,10 +156,10 @@ public class TextFieldSet extends GVRSceneObject implements KeyboardEventListene
         mCurrentMidPoint = midPoint;
         GVRContext gvrContext = getGVRContext();
         GVRMesh mesh = gvrContext.createQuad(width, height);
-        AvrUtil.offsetQuad(mesh, midPoint.x, midPoint.y, midPoint.z - 0.001f);
+        AvrUtil.offsetMesh(mesh, midPoint.x, midPoint.y, midPoint.z - 0.001f);
         GVRRenderData renderData = getRenderData();
         if (renderData == null) {
-            renderData = new GVRRenderData(gvrContext);
+            renderData = new GVRRenderData(gvrContext, AvrUtil.createTextureMaterial(gvrContext));
             attachRenderData(renderData);
         }
         renderData.setAlphaBlend(true);
@@ -167,9 +167,7 @@ public class TextFieldSet extends GVRSceneObject implements KeyboardEventListene
         renderData.setMesh(mesh);
         mMainTexture = mStyle.gvrTexture(gvrContext, width, height, mStyle.background);
         mHoverTexture = mStyle.gvrTexture(gvrContext, width, height, mStyle.hover_background);
-        GVRMaterial material = new GVRMaterial(gvrContext);
-        renderData.setMaterial(material);
-        material.setMainTexture(mHover ? mHoverTexture : mMainTexture);
+        AvrUtil.setDiffuseAndAmbientTextures(renderData.getMaterial(), mHover ? mHoverTexture : mMainTexture);
         attachCollider(new GVRMeshCollider(gvrContext, true));
     }
 
@@ -255,7 +253,7 @@ public class TextFieldSet extends GVRSceneObject implements KeyboardEventListene
             VertexBox bounds = new VertexBox(this, childObjects);
             GVRMesh mesh = getGVRContext().createQuad(bounds.getWidth(), bounds.getHeight());
             Vector3f offset = bounds.getMidPoint();
-            AvrUtil.offsetQuad(mesh, offset.x, offset.y, offset.z);
+            AvrUtil.offsetMesh(mesh, offset.x, offset.y, offset.z);
             objects = Collections.singletonList(new GVRSceneObject(getGVRContext(), mesh));
         }
         return objects;

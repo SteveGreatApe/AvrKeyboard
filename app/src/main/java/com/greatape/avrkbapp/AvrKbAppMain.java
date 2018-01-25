@@ -14,11 +14,7 @@
  */
 package com.greatape.avrkbapp;
 
-import android.util.Log;
-import android.view.MotionEvent;
-
 import com.greatape.avrkeyboard.util.AvrTouchHandler;
-import com.greatape.avrutils.AvrControllerButtonHandler;
 import com.greatape.avrutils.AvrEventHandler;
 
 import org.gearvrf.GVRAndroidResource;
@@ -31,12 +27,11 @@ import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTexture;
-import org.gearvrf.ITouchEvents;
-import org.gearvrf.io.GVRControllerType;
 import org.gearvrf.io.GVRInputManager;
 
 import java.util.EnumSet;
 
+import static android.view.MotionEvent.BUTTON_PRIMARY;
 import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
@@ -69,6 +64,7 @@ public class AvrKbAppMain extends GVRMain {
         GVRInputManager inputManager = mGVRContext.getInputManager();
         cursor = new GVRSceneObject(mGVRContext, mGVRContext.createQuad(1f, 1f), trackerTexture);
         cursor.getRenderData().setDepthTest(false);
+        cursor.getRenderData().disableLight();
         cursor.getRenderData().setRenderingOrder(GVRRenderData.GVRRenderingOrder.OVERLAY);
         // Set up the controller types supported.
         // TODO: Add and test Mouse and Gamepad controllers
@@ -81,6 +77,15 @@ public class AvrKbAppMain extends GVRMain {
                 GVRPicker picker = newController.getPicker();
                 EnumSet<GVRPicker.EventOptions> eventOptions = picker.getEventOptions();
                 eventOptions.add(GVRPicker.EventOptions.SEND_TO_HIT_OBJECT);
+                int touchButtons = BUTTON_PRIMARY;
+                switch(newController.getControllerType()) {
+                    case CONTROLLER:
+                        touchButtons = BUTTON_SECONDARY;
+                        break;
+                    case MOUSE:
+                        break;
+                }
+                newController.setTouchButtons(touchButtons);
 
                 newController.addControllerEventListener(AvrEventHandler.controllerButtonHandler());
                 newController.setCursor(cursor);

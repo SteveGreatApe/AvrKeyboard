@@ -14,8 +14,6 @@
  */
 package com.greatape.avrkbapp;
 
-import android.view.KeyEvent;
-
 import com.greatape.avrkbapp.objects.EditWithGreySquareKeyboard;
 import com.greatape.avrkbapp.objects.EditableName;
 import com.greatape.avrkbapp.objects.EditableNumber;
@@ -24,15 +22,11 @@ import com.greatape.avrkbapp.objects.FloorObject;
 import com.greatape.avrkbapp.objects.LotsOfTextFields;
 import com.greatape.avrkbapp.objects.OuterSphere;
 import com.greatape.avrkbapp.objects.SmallScaleAndRedKeyboard;
-import com.greatape.avrkeyboard.util.ClickLocation;
-import com.greatape.avrutils.AvrControllerButton;
 import com.greatape.avrutils.AvrPlayer;
 import com.greatape.avrutils.AvrSceneBase;
-import com.greatape.avrutils.VrMath;
 
 import org.gearvrf.GVRCameraRig;
 import org.gearvrf.GVRContext;
-import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRTransform;
 import org.joml.Vector3f;
@@ -44,6 +38,8 @@ public class AvrKbAppScene extends AvrSceneBase implements AvrPlayer.BoundsCheck
     private final static float FloorSize = 60f;
     private final static float Radius = FloorSize / 2;
     private final static int[] sSphereColours = {0xFF2060A0, 0xFF000000, 0xFFFFFFFF, 0xFF801010, 0xFF108020};
+    private final static int[] sAmbientLights = {0x00000000, 0xFF808080, 0xFF808080, 0x00000000, 0xFF208040};
+    private final static int[] sDiffuseLights = {0x00000000, 0xFF000000, 0xFF808080, 0xFFFF4040, 0xFF208040};
     private final static String[] sFloorTextures = {
             "textures/Floor2.png",
             "textures/Floor3.png",
@@ -99,6 +95,7 @@ public class AvrKbAppScene extends AvrSceneBase implements AvrPlayer.BoundsCheck
 
         mOuterSphere = new OuterSphere(gvrContext, Radius);
         mOuterSphere.setColors(sSphereColours);
+        mOuterSphere.setLights(sAmbientLights, sDiffuseLights);
         mOuterSphere.addToMainScene();
 
         mEditableName = new EditableName(gvrContext);

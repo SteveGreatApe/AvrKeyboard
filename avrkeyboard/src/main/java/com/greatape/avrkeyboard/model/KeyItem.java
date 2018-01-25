@@ -24,9 +24,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 import android.util.SparseArray;
-import android.view.MotionEvent;
 
 import com.android.inputmethod.annotations.UsedForTesting;
 import com.greatape.avrkeyboard.styles.KeyStyle;
@@ -35,7 +33,6 @@ import com.greatape.avrkeyboard.util.AvrTouchHandler;
 import com.greatape.avrkeyboard.util.AvrUtil;
 
 import org.gearvrf.GVRContext;
-import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMesh;
 import org.gearvrf.GVRMeshCollider;
 import org.gearvrf.GVRPicker;
@@ -43,11 +40,8 @@ import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTexture;
 import org.gearvrf.GVRTransform;
-import org.gearvrf.ITouchEvents;
 
 import java.lang.ref.SoftReference;
-
-import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend
@@ -119,7 +113,7 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
         initPaint(keyStyle);
         GVRRenderData renderData = createMesh(gvrContext);
         attachRenderData(renderData);
-        renderData.getMaterial().setMainTexture(mMainTexture);
+        AvrUtil.setDiffuseAndAmbientTextures(renderData.getMaterial(), mMainTexture);
         renderData.setAlphaBlend(true);
         renderData.setRenderingOrder(renderingOrder + 1);
         mDetailSceneObject = new GVRSceneObject(gvrContext);
@@ -128,6 +122,7 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
         detailRenderData.setRenderingOrder(renderingOrder + 2);
         detailRenderData.setAlphaBlend(true);
         addChildObject(mDetailSceneObject);
+        setDimmed(false);
         setTag(this);
         attachCollider(new GVRMeshCollider(gvrContext, true));
     }
@@ -256,9 +251,9 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
 
     void setDimmed(boolean dimmed) {
         mDimmed = dimmed;
-        int color = dimmed ? 0x808080 : 0xFFFFFF;
-        getRenderData().getMaterial().setColor(color);
-        mDetailSceneObject.getRenderData().getMaterial().setColor(color);
+        int color = dimmed ? 0xFF808080 : 0xFFFFFFFF;
+        AvrUtil.setDiffuseAndAmbientColors(this, color);
+        AvrUtil.setDiffuseAndAmbientColors(mDetailSceneObject, color);
     }
 
     protected void switchMaterialState(int shiftMode, int shiftExtra, Boolean hover) {
@@ -279,7 +274,7 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
         setRectTexture(rectTexture);
         if (hover != null && hover != mHover) {
             mHover = hover;
-            getRenderData().getMaterial().setMainTexture(hover ? mHoverTexture : mMainTexture);
+            AvrUtil.setDiffuseAndAmbientTextures(getRenderData().getMaterial(), hover ? mHoverTexture : mMainTexture);
         }
     }
 
@@ -288,7 +283,7 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
             GVRTransform transform = mDetailSceneObject.getTransform();
             transform.setScale(rectTexture.xScale, rectTexture.yScale, 1f);
             transform.setPosition(rectTexture.xPos, rectTexture.yPos, 0.001f);
-            mDetailSceneObject.getRenderData().getMaterial().setMainTexture(rectTexture.gvrTexture);
+            AvrUtil.setDiffuseAndAmbientTextures(mDetailSceneObject.getRenderData().getMaterial(), rectTexture.gvrTexture);
             mDetailSceneObject.setEnable(true);
         } else {
             mDetailSceneObject.setEnable(false);
@@ -300,12 +295,10 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
     }
 
     private GVRRenderData createMesh(GVRContext gvrContext) {
-        GVRRenderData renderData = new GVRRenderData(gvrContext);
+        GVRRenderData renderData = new GVRRenderData(gvrContext, AvrUtil.createTextureMaterial(gvrContext));
         GVRMesh mesh = gvrContext.createQuad(mMeshWidth, mMeshHeight);
-        GVRMaterial material = new GVRMaterial(gvrContext);
         renderData.setAlphaBlend(true);
         renderData.setMesh(mesh);
-        renderData.setMaterial(material);
         return renderData;
     }
 
