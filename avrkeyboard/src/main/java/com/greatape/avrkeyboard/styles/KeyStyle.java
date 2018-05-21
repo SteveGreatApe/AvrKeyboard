@@ -37,6 +37,7 @@ public class KeyStyle {
     public Typeface font_typeface;
     public int text_color;
     public int text_color_hover;
+    public boolean backlight;
 
     public int vrToPixelRatio = 272;
 
@@ -56,6 +57,7 @@ public class KeyStyle {
         font_typeface = other.font_typeface;
         text_color = other.text_color;
         text_color_hover = other.text_color_hover;
+        backlight = other.backlight;
     }
 
     private NinePatchDrawable ninePatchDrawable(GVRContext gvrContext, int resId) {

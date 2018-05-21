@@ -20,12 +20,10 @@ import android.view.MotionEvent;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMeshCollider;
-import org.gearvrf.GVRPhongShader;
 import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRPointLight;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
-import org.gearvrf.GVRShaderId;
 import org.gearvrf.ITouchEvents;
 import org.gearvrf.scene_objects.GVRSphereSceneObject;
 import org.gearvrf.utility.Colors;
@@ -46,7 +44,7 @@ public class OuterSphere extends ObjectBase implements ITouchEvents {
     public OuterSphere(GVRContext gvrContext, float radius) {
         mSceneObject = new GVRSphereSceneObject(gvrContext, false, radius);
         GVRRenderData renderData = mSceneObject.getRenderData();
-        mMaterial = new GVRMaterial(gvrContext, new GVRShaderId(GVRPhongShader.class));
+        mMaterial = new GVRMaterial(gvrContext, GVRMaterial.GVRShaderType.Phong.ID);
         renderData.setMaterial(mMaterial);
         renderData.setAlphaBlend(true);
         renderData.setRenderingOrder(GVRRenderData.GVRRenderingOrder.BACKGROUND);

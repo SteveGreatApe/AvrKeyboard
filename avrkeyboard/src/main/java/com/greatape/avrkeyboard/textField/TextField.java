@@ -33,11 +33,9 @@ import org.gearvrf.GVRDrawFrameListener;
 import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMesh;
 import org.gearvrf.GVRMeshCollider;
-import org.gearvrf.GVRPhongShader;
 import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRSceneObject;
-import org.gearvrf.GVRShaderId;
 import org.gearvrf.GVRTexture;
 import org.gearvrf.ITouchEvents;
 import org.gearvrf.utility.Colors;
@@ -161,12 +159,7 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
         GVRSceneObject cursor = new GVRSceneObject(gvrContext, mStyle.cursor_width, mCursorHeight);
         GVRRenderData renderData = cursor.getRenderData();
         renderData.setRenderingOrder(mBaseRenderingOrder + CursorRenderingOrderBoost);
-        // TODO: Latest Post 3.3 requires this change
-        GVRMaterial material = new GVRMaterial(gvrContext, new GVRShaderId(GVRPhongShader.class));
-        // else for 3.3
-//        GVRMaterial material = new GVRMaterial(gvrContext);
-//        renderData.setShaderTemplate(GVRPhongShader.class);
-        // END 3.3
+        GVRMaterial material = new GVRMaterial(gvrContext, GVRMaterial.GVRShaderType.Phong.ID);
         int alpha = Color.alpha(mStyle.cursor_color);
         material.setDiffuseColor(
                 Colors.byteToGl(Color.red(mStyle.cursor_color)),
@@ -177,7 +170,6 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
         renderData.setMaterial(material);
         cursor.setEnable(false);
         addChildObject(cursor);
-        gvrContext.getMainScene().bindShaders(cursor);
         return cursor;
     }
 
@@ -391,6 +383,9 @@ public class TextField extends GVRSceneObject implements GVRDrawFrameListener, K
         TextFieldItem character = new TextFieldItem(getGVRContext(), width, mStyle.font_height, bitmap, keyChar, TextField.this);
         mCharacterWidths.add(mCursorIndex, width);
         character.getRenderData().setRenderingOrder(mBaseRenderingOrder + CharacterRenderingOrderBoost);
+        if (mStyle.textStyle.backlight) {
+            character.getRenderData().disableLight();
+        }
         mTextFieldItems.add(mCursorIndex, character);
         addChildObject(character);
         updateCursorIndex(mCursorIndex + 1);

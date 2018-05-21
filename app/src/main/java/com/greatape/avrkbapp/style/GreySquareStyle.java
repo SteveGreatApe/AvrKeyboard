@@ -43,6 +43,7 @@ public class GreySquareStyle {
             keyStyle.hover_background.drawable = R.drawable.avrk_square_key_hover;
             keyStyle.hover_background.tint = 0x80FFFFFF;
             keyStyle.depressed_depth = 0.2f;
+            keyStyle.backlight = true;
 
             background.drawable = R.drawable.avrk_custom_background;
             background.tint = Color.BLACK;

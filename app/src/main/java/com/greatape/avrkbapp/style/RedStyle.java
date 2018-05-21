@@ -43,6 +43,7 @@ public class RedStyle {
             keyStyle.hover_background.drawable = R.drawable.avrk_keyhover;
             keyStyle.hover_background.tint = MainColor & 0xA0FF8080;
             keyStyle.depressed_depth = 0.2f;
+            keyStyle.backlight = true;
 
             background.drawable = R.drawable.avrk_custom_background;
             background.tint = 0xFF000000;
@@ -77,6 +78,7 @@ public class RedStyle {
             keyStyle.depressed_depth = 0.15f;
             keyStyle.text_color = MainColor;
             keyStyle.text_color_hover = TextFieldHoverTextColor;
+            keyStyle.backlight = true;
 
             back_button = new Button(R.drawable.avrk_text_field_back, 0.9f, keyStyle,
                     BUTTON_SIZE, BUTTON_SIZE, BUTTON_MARGIN);
@@ -95,6 +97,7 @@ public class RedStyle {
             textStyle.hover_background.drawable = R.drawable.avrk_custom_background;
             textStyle.hover_background.tint = Color.RED;
             textStyle.font_typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+            textStyle.backlight = true;
             font_height = TEXT_HEIGHT;
         }
     }

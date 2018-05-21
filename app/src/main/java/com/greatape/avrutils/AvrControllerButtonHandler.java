@@ -17,7 +17,7 @@ package com.greatape.avrutils;
 import android.util.SparseIntArray;
 import android.view.KeyEvent;
 
-import org.gearvrf.GVRCursorController;
+import org.gearvrf.io.GVRCursorController;
 
 import java.util.WeakHashMap;
 

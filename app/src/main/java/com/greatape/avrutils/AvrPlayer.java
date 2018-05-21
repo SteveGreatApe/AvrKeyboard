@@ -16,7 +16,10 @@
 package com.greatape.avrutils;
 
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.KeyEvent;
+
+import com.greatape.avrkeyboard.debug.AvrDebugUtils;
 
 import org.gearvrf.GVRCameraRig;
 import org.gearvrf.GVRDrawFrameListener;
@@ -32,6 +35,7 @@ import org.joml.Vector3f;
  */
 public class AvrPlayer implements GVRDrawFrameListener {
     private final static String TAG = "AvrPlayer";
+    private final static boolean verboseLog = false;
 
     private final static float MoveMaxRange = 314;
     private final static float HalfMaxRange = MoveMaxRange / 2f;
@@ -44,6 +48,7 @@ public class AvrPlayer implements GVRDrawFrameListener {
     private Vector3f mCameraRigPos;
     private GVRSceneObject mDirectionPointer;
     private double mPlayerAngle;
+    private double mSetPlayerAngle;
     private double mPlayerAngleRadians;
     private double mSinPlayerAngle;
     private double mCosPlayerAngle;
@@ -89,21 +94,18 @@ public class AvrPlayer implements GVRDrawFrameListener {
         setPosition(cameraPos, 0.0f);
         mMoveDirection = MoveDirection.TowardsLook;
         mCosPlayerAngle = 1.0f;
-//        ICameraEvents cameraEvents = new ICameraEvents() {
-//            public void onViewChange(GVRCameraRig rig) {
-//                Log.d(TAG, "onViewChange:");
-//                updateCameraRig(rig);
-//            }
-//        };
-//        scene.getGVRContext().getEventReceiver().addListener(cameraEvents);
+        mSetPlayerAngle = 666.666f;
     }
 
-    public void updateCameraRig(GVRCameraRig rig) {
+    private void updateCameraRig(GVRCameraRig rig) {
         rig.getTransform().setPosition(mCameraRigPos.x, mCameraRigPos.y, mCameraRigPos.z);
-        rig.getTransform().setRotationByAxis((float)mPlayerAngle, 0.0f, 1.0f, 0.0f);
-        if (mDirectionPointer != null) {
-            mDirectionPointer.getTransform().setRotationByAxis((float)mPlayerAngle, 0f, 1f, 0f);
-            mDirectionPointer.getTransform().setPosition(mCameraRigPos.x, mCameraRigPos.y, mCameraRigPos.z);
+        if (mPlayerAngle != mSetPlayerAngle) {
+            rig.getTransform().setRotationByAxis((float) mPlayerAngle, 0.0f, 1.0f, 0.0f);
+            mSetPlayerAngle = mPlayerAngle;
+            if (mDirectionPointer != null) {
+                mDirectionPointer.getTransform().setRotationByAxis((float) mPlayerAngle, 0f, 1f, 0f);
+                mDirectionPointer.getTransform().setPosition(mCameraRigPos.x, mCameraRigPos.y, mCameraRigPos.z);
+            }
         }
     }
 
@@ -196,9 +198,14 @@ public class AvrPlayer implements GVRDrawFrameListener {
 
     private synchronized void handleControllerEvent(Quaternionf orientation, PointF touchPadPosition, boolean touched) {
         if (!touched) {
-            mControllerPoint = null;
+            if (mControllerPoint != null) {
+                mControllerPoint = null;
+                if (verboseLog)
+                    Log.d(TAG, "mControllerPoint=" + null);
+            }
         } else {
             mControllerPoint = new PointF(touchPadPosition.x, touchPadPosition.y);
+            if (verboseLog) Log.d(TAG, "mControllerPoint=" + AvrDebugUtils.format(mControllerPoint));
         }
         mControllerOrientation = new Quaternionf(orientation);
     }

@@ -20,13 +20,13 @@ import com.greatape.avrutils.AvrEventHandler;
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRAssetLoader;
 import org.gearvrf.GVRContext;
-import org.gearvrf.GVRCursorController;
 import org.gearvrf.GVRMain;
 import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRRenderData;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRTexture;
+import org.gearvrf.io.GVRCursorController;
 import org.gearvrf.io.GVRInputManager;
 
 import java.util.EnumSet;

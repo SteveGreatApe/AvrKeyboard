@@ -21,7 +21,7 @@ import android.os.Handler;
 import com.greatape.avrkeyboard.debug.AvrDebugUtils;
 
 import org.gearvrf.BuildConfig;
-import org.gearvrf.GVRBitmapTexture;
+import org.gearvrf.GVRBitmapImage;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRMesh;
@@ -68,22 +68,14 @@ public class AvrUtil {
     }
 
     public static float[] getMeshVertices(GVRMesh mesh) {
-        // TODO: For 4.0 use this alternative, delete once onto an official build with a fix
-        GVRVertexBuffer vertexBuffer = mesh.getVertexBuffer();
-        FloatBuffer floatBuffer = vertexBuffer.getFloatVec("a_position");
-        int count = floatBuffer.remaining();
-        float[] vertices = new float[count];
-        floatBuffer.get(vertices);
-        // For 3.3 this still works, should also be fixed post 4.0
-//        float[] vertices = mesh.getVertices(); // Throws UnsupportedOperationException in 4.0
-        return vertices;
+        return mesh.getVertices();
     }
 
     public static GVRTexture bitmapTexture(GVRContext gvrContext, Bitmap bitmap) {
         GVRTexture gvrTexture = null;
         if (bitmap != null) {
             gvrTexture = new GVRTexture(gvrContext);
-            gvrTexture.setImage(new GVRBitmapTexture(gvrContext, bitmap));
+            gvrTexture.setImage(new GVRBitmapImage(gvrContext, bitmap));
         }
         return gvrTexture;
     }

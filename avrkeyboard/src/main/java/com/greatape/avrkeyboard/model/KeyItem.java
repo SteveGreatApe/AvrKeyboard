@@ -122,6 +122,10 @@ public class KeyItem extends GVRSceneObject implements AvrTouchEvents {
         detailRenderData.setRenderingOrder(renderingOrder + 2);
         detailRenderData.setAlphaBlend(true);
         addChildObject(mDetailSceneObject);
+        if (keyStyle.backlight) {
+            renderData.disableLight();
+            detailRenderData.disableLight();
+        }
         setDimmed(false);
         setTag(this);
         attachCollider(new GVRMeshCollider(gvrContext, true));

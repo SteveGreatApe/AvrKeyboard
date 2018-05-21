@@ -18,14 +18,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import org.gearvrf.GVRContext;
-import org.gearvrf.GVRCursorController;
 import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.ITouchEvents;
 import org.gearvrf.io.GVRControllerType;
+import org.gearvrf.io.GVRCursorController;
 import org.gearvrf.io.GVRInputManager;
-
-import static android.view.MotionEvent.BUTTON_SECONDARY;
 
 /**
  * @author Steve Townsend
@@ -51,22 +49,23 @@ public class AvrTouchHandler implements ITouchEvents {
     }
 
     private boolean isMainButton(GVRPicker.GVRPickedObject gvrPickedObject) {
-        boolean ret = false;
-        switch(sAvrControllerMonitor.controllerType) {
-            case CONTROLLER:
-                if (gvrPickedObject.motionEvent != null) {
-                    int buttonState = gvrPickedObject.motionEvent.getButtonState();
-                    ret = buttonState == BUTTON_SECONDARY;
-                }
-                break;
-            case GAZE:
-                ret = true;
-                break;
-            default:
-                break;
-        }
-        if (verboseLog) Log.d(TAG, "isMainButton=" + ret + " " + sAvrControllerMonitor.controllerName() + " motionEvent=" + gvrPickedObject.motionEvent);
-        return ret;
+        return true;
+//        boolean ret = false;
+//        switch(sAvrControllerMonitor.controllerType) {
+//            case CONTROLLER:
+//                if (gvrPickedObject.motionEvent != null) {
+//                    int buttonState = gvrPickedObject.motionEvent.getButtonState();
+//                    ret = buttonState == BUTTON_SECONDARY;
+//                }
+//                break;
+//            case GAZE:
+//                ret = true;
+//                break;
+//            default:
+//                break;
+//        }
+//        if (verboseLog) Log.d(TAG, "isMainButton=" + ret + " " + sAvrControllerMonitor.controllerName() + " motionEvent=" + gvrPickedObject.motionEvent);
+//        return ret;
     }
 
     @Override

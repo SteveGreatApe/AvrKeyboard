@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.greatape.avrkbapp"
         minSdkVersion 23
@@ -31,6 +31,9 @@ android {
         } else {
             exclude 'lib/armeabi-v7a/*.so'
         }
+
+        pickFirst 'lib/*/libc++_shared.so'
+        pickFirst 'lib/*/libgnustl_shared.so'
     }
     compileOptions {
         targetCompatibility 1.8
@@ -51,11 +54,11 @@ task copyOculusSignature(type: Copy) {
 preBuild {}.dependsOn copyOculusSignature
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
     implementation "org.joml:joml-android:${jomlVersion}"
-    implementation 'com.google.vr:sdk-base:1.101.0'
-    implementation 'com.google.vr:sdk-controller:1.101.0'
+    implementation 'com.google.vr:sdk-base:1.130.0'
+    implementation 'com.google.vr:sdk-controller:1.130.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'
 
     // Use official release of GearVRf
@@ -69,8 +72,8 @@ dependencies {
     implementation(name: 'backend_oculus-debug', ext: 'aar')
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation project(path: ':avrkeyboard')
 }

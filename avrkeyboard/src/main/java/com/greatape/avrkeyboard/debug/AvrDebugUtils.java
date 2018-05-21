@@ -1,5 +1,6 @@
 package com.greatape.avrkeyboard.debug;
 
+import android.graphics.PointF;
 import android.os.Debug;
 import android.os.Environment;
 import android.util.Log;
@@ -8,6 +9,7 @@ import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRShaderId;
 import org.gearvrf.GVRTransform;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,12 +53,39 @@ public class AvrDebugUtils {
         return stringBuilder.toString();
     }
 
+    public static String format(PointF pointF) {
+        if (pointF == null) {
+            return "null";
+        }
+        return format2f(pointF.x, pointF.y);
+    }
+
     public static String format(Vector2f vector2f) {
+        if (vector2f == null) {
+            return "null";
+        }
+        return format2f(vector2f.x, vector2f.y);
+    }
+
+    private static String format2f(float x, float y) {
+        return "{" +
+                format(x) +
+                ", " +
+                format(y) +
+                '}';
+    }
+
+    public static String format(Vector3f vector3f) {
+        if (vector3f == null) {
+            return "null";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append('{');
-        stringBuilder.append(format(vector2f.x));
+        stringBuilder.append(format(vector3f.x));
         stringBuilder.append(", ");
-        stringBuilder.append(format(vector2f.y));
+        stringBuilder.append(format(vector3f.y));
+        stringBuilder.append(", ");
+        stringBuilder.append(format(vector3f.z));
         stringBuilder.append('}');
         return stringBuilder.toString();
     }
@@ -118,6 +147,7 @@ public class AvrDebugUtils {
     public static void assertEquals(GVRShaderId shader1, GVRShaderId shader2) {
         try {
             Field idField = GVRShaderId.class.getDeclaredField("ID");
+            idField.setAccessible(true);
             Object id1 = idField.get(shader1);
             Object id2 = idField.get(shader2);
             if (!id1.equals(id2)) {

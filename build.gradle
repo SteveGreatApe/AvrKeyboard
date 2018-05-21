@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0-alpha06'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha14'
         
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -34,8 +34,8 @@ allprojects {
         }
 // Enable this (and adjust path if necessary) to build from local GearVRf build
         flatDir {
-//        dirs '../../GearVRf/GearVRf/GVRf/gearvrf-libs'
-            dirs '../../NolaDonato/GearVRf/GVRf/gearvrf-libs'
+            dirs '../../GearVRf/GearVRf/GVRf/gearvrf-libs'
+//            dirs '../../NolaDonato/GearVRf/GVRf/gearvrf-libs'
         }
     }
 }
